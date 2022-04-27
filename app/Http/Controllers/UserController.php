@@ -17,7 +17,8 @@ class UserController extends Controller
      */
     public function index()
     {
-       return User::query()->get();
+       $user = auth()->guard('web')->user();
+       return view('user.orders', compact('user'));
     }
 
     /**

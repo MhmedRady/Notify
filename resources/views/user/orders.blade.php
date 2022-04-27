@@ -1,46 +1,43 @@
-@extends('seller.home')
+@extends('layouts.app')
 
-
-@section('home.content')
-    <h5 class="card-header text-capitalize">Orders</h5>
-    <div class="card-body">
-        <table class="table table-striped table-hover">
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Status</th>
-                <th scope="col">Product</th>
-                <th scope="col">Stock</th>
-                <th scope="col">Amount</th>
-                <th scope="col">Sipping</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach($user->sellerOrders as $key => $order)
-                <tr>
-                    <th scope="row">{{$key +1}}</th>
-                    <td>{{$order->status->name}}</td>
-                    <td>{{$order->product->name}}</td>
-                    <td>{{$order->product->stock}}</td>
-                    <td>{{$order->product->price}}</td>
-                    <td>
-                        @if(!is_null($order->delivery))
-                            @if($order->status_id == 2)
-                                <button id="deliveryOrder_{{$order->id}}" data-order="{{$order->id}}" class="btn btn-primary btn-sm fw-bolder" data-bs-toggle="modal" data-bs-target="#deliveryModal">Delivery</button>
-                            @else
-                                <button class="btn btn-warning btn-sm fw-bolder">In Shipping</button>
-                            @endif
-                        @else
-                            <button class="btn btn-secondary btn-sm fw-bolder disabled" readonly="">No Delivery</button>
-                        @endif
-                    </td>
-                </tr>
-            @endforeach
-            </tbody>
-        </table>
+@section('content')
+    <div class="container">
+        <h2 class="h2 text-center text-capitalize text-decoration-underline mt-2 mb-5">Seller Dashboard</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card">
+                    <h5 class="card-header text-capitalize">Orders</h5>
+                    <div class="card-body">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Product</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Receiving</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($user->orders as $key => $order)
+                                <tr>
+                                    <th scope="row">{{$key +1}}</th>
+                                    <td>{{$order->product->name}}</td>
+                                    <td>{{$order->product->stock}}</td>
+                                    <td>{{$order->product->price}}</td>
+                                    <td>{{$order->received_at??'Not shipped yet'}}</td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    @include('seller.deliveryModal')
+                    @include('components.toastr')
+                </div>
+                <hr class="my-5">
+            </div>
+        </div>
     </div>
-    @include('seller.deliveryModal')
-    @include('components.toastr')
 @endsection
 
 @push('scripts')

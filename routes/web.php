@@ -17,9 +17,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+//Route::get('/dashboard', function () {
+//    return view('dashboard');
+//})->middleware(['auth'])->name('dashboard');
 
 require __DIR__.'/auth.php';
 
@@ -30,6 +30,12 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::resource('/l-fcm', \App\Http\Controllers\FCMController::class)->only(['create', 'store']);
 
 Route::post('/send-notify', [\App\Http\Controllers\FCMController::class, 'sendWebNotification'])->name('send.notify');
+
+Route::as('user.')->middleware('auth:web')->prefix('/user')
+    ->controller(\App\Http\Controllers\UserController::class)
+    ->group(function (){
+        Route::get('/', 'index')->name('dashboard');
+    });
 
 Route::as('delivery.')->prefix('/delivery')
     ->controller(\App\Http\Controllers\Delivery\DeliveryController::class)
